@@ -31,18 +31,27 @@ class ParkingLot:
 
 def activate():
 
+    tgr_ref = uwi.document(u'TGR')
+
     while True:
 
         time.sleep(10)
         print("Sending new info")
         parkingLots[0].setTSpaces(parkingLots[0].tSpaces + 5)
-        print("Available spaces:", parkingLots[0].tSpaces)
+        tgr_ref.update({u'taken_spaces' : parkingLots[0].tSpaces})
+        tgr_ref.update({u'parking_spaces': 55})
+
+        tgr = tgr_ref.get()
+        print("Available spaces:", tgr.to_dict())
 
         time.sleep(10)
         print("Sending new info")
         parkingLots[0].setTSpaces(parkingLots[0].tSpaces - 5)
-        print("Available spaces:", parkingLots[0].tSpaces)
+        tgr_ref.update({u'taken_spaces' : parkingLots[0].tSpaces})
+        tgr_ref.update({u'parking_spaces': 50})
 
+        tgr = tgr_ref.get()
+        print("Available spaces:", tgr.to_dict())
 
 
 cred = credentials.Certificate('UWIParkServiceAccountKey.json')
@@ -54,8 +63,10 @@ lots = uwi.get()
 
 x = 0
 parkingLots = []
+fireLots = []
 
 for lot in lots:
+    fireLots.append(lot)
     parkingLots.append(ParkingLot(lot))
 
     x = x + 1
