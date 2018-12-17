@@ -29,29 +29,26 @@ class ParkingLot:
             self.tSpaces = num
 
 
-def activate():
+def updateNumOfFreeSpaces(lot, free_spaces):
 
-    tgr_ref = uwi.document(u'TGR')
+    tgr_ref = uwi.document(lot.name)
 
-    while True:
+    time.sleep(10)
+    print("Sending new info")
+    lot.setTSpaces(free_spaces)
+    tgr_ref.update({u'taken_spaces' : lot.tSpaces})
 
-        time.sleep(10)
-        print("Sending new info")
-        parkingLots[0].setTSpaces(parkingLots[0].tSpaces + 5)
-        tgr_ref.update({u'taken_spaces' : parkingLots[0].tSpaces})
-        tgr_ref.update({u'parking_spaces': 55})
+    tgr = tgr_ref.get()
+    print("Available spaces:", tgr.to_dict())
 
-        tgr = tgr_ref.get()
-        print("Available spaces:", tgr.to_dict())
-
-        time.sleep(10)
-        print("Sending new info")
-        parkingLots[0].setTSpaces(parkingLots[0].tSpaces - 5)
-        tgr_ref.update({u'taken_spaces' : parkingLots[0].tSpaces})
-        tgr_ref.update({u'parking_spaces': 50})
-
-        tgr = tgr_ref.get()
-        print("Available spaces:", tgr.to_dict())
+    # time.sleep(10)
+    # print("Sending new info")
+    # parkingLots[0].setTSpaces(parkingLots[0].tSpaces - 5)
+    # tgr_ref.update({u'taken_spaces' : parkingLots[0].tSpaces})
+    # tgr_ref.update({u'parking_spaces': 50})
+    #
+    # tgr = tgr_ref.get()
+    # print("Available spaces:", tgr.to_dict())
 
 
 cred = credentials.Certificate('UWIParkServiceAccountKey.json')
@@ -69,6 +66,11 @@ for lot in lots:
     fireLots.append(lot)
     parkingLots.append(ParkingLot(lot))
 
-    x = x + 1
+print(parkingLots[0].name, parkingLots[0].tSpaces)
 
-activate()
+#def uploadPicture()
+
+updateNumOfFreeSpaces(parkingLots[0], 25)
+
+print(parkingLots[0].name, parkingLots[0].tSpaces)
+
