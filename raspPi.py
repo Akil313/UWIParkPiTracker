@@ -2,6 +2,9 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 import time
+# import numpy as np
+# import tensorflow as tf
+
 
 class ParkingLot:
 
@@ -10,17 +13,19 @@ class ParkingLot:
         self.lot = lot
         self.lotInfo = lot.to_dict()
 
-        self.name, self.pSpaces, self.tSpaces, self.location = self.extractInfo()
+        print(self.lotInfo)
 
+        self.name, self.pSpaces, self.tSpaces= self.extractInfo()
+
+    # extracInfo organizes parking lot from firebase a class dictionary
     def extractInfo(self):
         print(self.lotInfo)
 
         name = self.lot.id
         pSpaces = self.lotInfo['parking_spaces']
         tSpaces = self.lotInfo['taken_spaces']
-        location = self.lotInfo['location']
 
-        return name, pSpaces, tSpaces, location
+        return name, pSpaces, tSpaces
 
     def setTSpaces(self, num):
 
@@ -28,7 +33,7 @@ class ParkingLot:
 
             self.tSpaces = num
 
-
+# Changes the value of the free spaces available based on the parking lot and the number of free spaces passed to the function.
 def updateNumOfFreeSpaces(lot, free_spaces):
 
     tgr_ref = uwi.document(lot.name)
@@ -68,9 +73,6 @@ for lot in lots:
 
 print(parkingLots[0].name, parkingLots[0].tSpaces)
 
-#def uploadPicture()
-
 updateNumOfFreeSpaces(parkingLots[0], 25)
 
 print(parkingLots[0].name, parkingLots[0].tSpaces)
-
